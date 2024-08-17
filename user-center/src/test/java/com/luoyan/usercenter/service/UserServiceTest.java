@@ -29,6 +29,7 @@ class UserServiceTest {
         queryWrapper.eq(User::getId, "4");
         boolean result = userService.save(user);
         System.out.println(user.getId());
+        
     }
 
     @Test
