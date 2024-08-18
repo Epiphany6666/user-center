@@ -1,6 +1,6 @@
 package com.luoyan.usercenter.service;
 
-import com.luoyan.usercenter.model.User;
+import com.luoyan.usercenter.model.domain.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 * @createDate 2024-08-17 10:04:47
 */
 public interface UserService extends IService<User> {
+
+
     /**
      * ⽤户注释
      * @param userAccount ⽤户账户
@@ -28,4 +30,11 @@ public interface UserService extends IService<User> {
      * @return 脱敏后的用户信息
      */
     User userLogin(String userAccount, String userPassword, HttpServletRequest request);
+
+    /**
+     * 用户脱敏
+     * @param user
+     * @return
+     */
+    User getSafetyUser(User user);
 }

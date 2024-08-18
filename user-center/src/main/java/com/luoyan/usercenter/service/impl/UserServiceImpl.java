@@ -3,7 +3,7 @@ package com.luoyan.usercenter.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.luoyan.usercenter.mapper.UserMapper;
-import com.luoyan.usercenter.model.User;
+import com.luoyan.usercenter.model.domain.User;
 import com.luoyan.usercenter.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +14,8 @@ import org.springframework.util.DigestUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.luoyan.usercenter.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
  * ⽤户服务实现类
@@ -30,10 +32,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     private static final String SALT = "yupi";
 
-    /**
-     * 用户登录态键
-     */
-    private static final String USER_LOGIN_STATE = "userLoginState";
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -113,20 +111,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return null;
         }
         // 3.用户脱敏
-        User safetyUser = new User();
-        safetyUser.setId(user.getId());
-        safetyUser.setUsername(user.getUsername());
-        safetyUser.setUserAccount(user.getUserAccount());
-        safetyUser.setAvatarUrl(user.getAvatarUrl());
-        safetyUser.setGender(user.getGender());
-        safetyUser.setEmail(user.getEmail());
-        safetyUser.setPhone(user.getPhone());
-        safetyUser.setUserStatus(user.getUserStatus());
-        safetyUser.setCreateTime(user.getCreateTime());
+        User safetyUser = getSafetyUser(user);
         // 4.记录用户的登录状态
-        request.getSession().setAttribute(USER_LOGIN_STATE, user);
-        // 4.记录⽤户的登录状态
-        request.getSession().setAttribute(USER_LOGIN_STATE, user);
-        return user;
+        request.getSession().setAttribute(USER_LOGIN_STATE, safetyUser);
+        return safetyUser;
+    }
+
+    /**
+     * 用户脱敏
+     *
+     * @param originUser
+     * @return
+     */
+    @Override
+    public User getSafetyUser(User originUser) {
+        User safetyUser = new User();
+        safetyUser.setId(originUser.getId());
+        safetyUser.setUsername(originUser.getUsername());
+        safetyUser.setUserAccount(originUser.getUserAccount());
+        safetyUser.setAvatarUrl(originUser.getAvatarUrl());
+        safetyUser.setGender(originUser.getGender());
+        safetyUser.setEmail(originUser.getEmail());
+        safetyUser.setUserRole(originUser.getUserRole());
+        safetyUser.setPhone(originUser.getPhone());
+        safetyUser.setUserStatus(originUser.getUserStatus());
+        safetyUser.setCreateTime(originUser.getCreateTime());
+        return safetyUser;
     }
 }

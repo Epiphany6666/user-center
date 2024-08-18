@@ -1,7 +1,7 @@
 package com.luoyan.usercenter.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.luoyan.usercenter.model.User;
+import com.luoyan.usercenter.model.domain.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

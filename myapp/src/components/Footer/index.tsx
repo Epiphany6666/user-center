@@ -1,6 +1,7 @@
 import { GithubOutlined } from '@ant-design/icons';
 import { DefaultFooter } from '@ant-design/pro-components';
 import React from 'react';
+import {PLANET_LINK} from "@/constants";
 
 const Footer: React.FC = () => {
   return (
@@ -10,21 +11,15 @@ const Footer: React.FC = () => {
       }}
       links={[
         {
-          key: 'Ant Design Pro',
-          title: 'Ant Design Pro',
-          href: 'https://pro.ant.design',
-          blankTarget: true,
-        },
-        {
           key: 'github',
-          title: <GithubOutlined />,
-          href: 'https://github.com/ant-design/ant-design-pro',
+          title: <><GithubOutlined />洛言 GitHub</>,
+          href: 'https://github.com/Epiphany6666',
           blankTarget: true,
         },
         {
-          key: 'Ant Design',
-          title: 'Ant Design',
-          href: 'https://ant.design',
+          key: 'CSDN',
+          title: 'CSDN',
+          href: PLANET_LINK,
           blankTarget: true,
         },
       ]}
