@@ -1,6 +1,8 @@
 package com.luoyan.usercenter.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.luoyan.usercenter.common.BaseResponse;
+import com.luoyan.usercenter.common.ResultUtils;
 import com.luoyan.usercenter.model.domain.User;
 import com.luoyan.usercenter.model.domain.UserLoginRequest;
 import com.luoyan.usercenter.model.domain.UserRegisterRequest;
@@ -37,10 +39,11 @@ public class UserController {
     String userAccount = userRegisterRequest.getUserAccount();
     String userPassword = userRegisterRequest.getUserPassword();
     String checkPassword = userRegisterRequest.getCheckPassword();
-    if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
+    String planetCode = userRegisterRequest.getPlanetCode();
+    if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword, planetCode)) {
       return null;
     }
-    return userService.userRegister(userAccount, userPassword, checkPassword);
+    return userService.userRegister(userAccount, userPassword, checkPassword, planetCode);
   }
 
   @PostMapping("/login")
@@ -54,6 +57,30 @@ public class UserController {
       return null;
     }
     return userService.userLogin(userAccount, userPassword, request);
+  }
+
+  @PostMapping("/logout")
+  public Integer userLogout(HttpServletRequest request) {
+    if (request == null) {
+      return null;
+    }
+    return userService.userLogout(request);
+  }
+
+  @GetMapping("/current")
+  public BaseResponse<User> getCurrentUser(HttpServletRequest request) {
+    Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+    User currentUser = (User) userObj;
+    if (currentUser == null) {
+      return null;
+    }
+
+    long userId = currentUser.getId();
+    // todo 校验用户是否合法
+    // 防止用户信息有变更，因此需要重新查询数据库
+    User user = userService.getById(userId);
+    User safetyUser = userService.getSafetyUser(user);
+    return ResultUtils.success(safetyUser);
   }
 
   @GetMapping("/search")
